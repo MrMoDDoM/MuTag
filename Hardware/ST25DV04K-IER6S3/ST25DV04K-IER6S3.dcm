@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ST25DV04K-IER6S3
+D STMICROELECTRONICS - ST25DV04K-IER6S3 - RFID/NFC IC, 13.553 MHz to 13.567 MHz, Read, Write, 4Kbit, I2C, 1.8 V to 5.5 V, SOIC-8
+K
+F https://ms.componentsearchengine.com/Datasheets/2/ST25DV04K-IER6S3.pdf
+$ENDCMP
+#
+#End Doc Library

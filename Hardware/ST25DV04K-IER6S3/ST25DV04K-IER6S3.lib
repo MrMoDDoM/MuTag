@@ -1,0 +1,33 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#SamacSys ECAD Model ST25DV04K-IER6S3
+#/766055/1053819/2.49/8/3/Integrated Circuit
+DEF ST25DV04K-IER6S3 IC 0 30 Y Y 1 F N
+F0 "IC" 1150 300 50 H V L CNN
+F1 "ST25DV04K-IER6S3" 1150 200 50 H V L CNN
+F2 "SOIC127P600X175-8N" 1150 100 50 H I L CNN
+F3 "https://ms.componentsearchengine.com/Datasheets/2/ST25DV04K-IER6S3.pdf" 1150 0 50 H I L CNN
+F4 "STMICROELECTRONICS - ST25DV04K-IER6S3 - RFID/NFC IC, 13.553 MHz to 13.567 MHz, Read, Write, 4Kbit, I2C, 1.8 V to 5.5 V, SOIC-8" 1150 -100 50 H I L CNN "Description"
+F5 "1.75" 1150 -200 50 H I L CNN "Height"
+F6 "STMicroelectronics" 1150 -300 50 H I L CNN "Manufacturer_Name"
+F7 "ST25DV04K-IER6S3" 1150 -400 50 H I L CNN "Manufacturer_Part_Number"
+F8 "511-ST25DV04K-IER6S3" 1150 -500 50 H I L CNN "Mouser Part Number"
+F9 "https://www.mouser.co.uk/ProductDetail/STMicroelectronics/ST25DV04K-IER6S3?qs=xjeEZJU9OeNdtP1j9447OQ%3D%3D" 1150 -600 50 H I L CNN "Mouser Price/Stock"
+F10 "ST25DV04K-IER6S3" 1150 -700 50 H I L CNN "Arrow Part Number"
+F11 "https://www.arrow.com/en/products/st25dv04k-ier6s3/stmicroelectronics?region=nac" 1150 -800 50 H I L CNN "Arrow Price/Stock"
+F12 "" 1150 -900 50 H I L CNN "Mouser Testing Part Number"
+F13 "" 1150 -1000 50 H I L CNN "Mouser Testing Price/Stock"
+DRAW
+X V_EH 1 0 0 200 R 50 50 0 0 P
+X AC0 2 0 -100 200 R 50 50 0 0 P
+X AC1 3 0 -200 200 R 50 50 0 0 P
+X VSS 4 0 -300 200 R 50 50 0 0 P
+X VCC 8 1300 0 200 L 50 50 0 0 P
+X GPO(OD) 7 1300 -100 200 L 50 50 0 0 P
+X SCL 6 1300 -200 200 L 50 50 0 0 P
+X SDA 5 1300 -300 200 L 50 50 0 0 P
+P 5 0 1 6 200 100 1100 100 1100 -400 200 -400 200 100 N
+ENDDRAW
+ENDDEF
+#
+#End Library

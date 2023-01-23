@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name "ST25DV04K-IER6S3")(type "KiCad")(uri "${KIPRJMOD}/ST25DV04K-IER6S3")(options "")(descr ""))
+  (lib (name "MuTag Antenna")(type "KiCad")(uri "/home/mrmoddom/Documents/Progetti/MuTag/test_antenna")(options "")(descr ""))
+)

@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "ST25DV04K-IER6S3")(type "Legacy")(uri "${KIPRJMOD}/ST25DV04K-IER6S3/ST25DV04K-IER6S3.lib")(options "")(descr ""))
+)
