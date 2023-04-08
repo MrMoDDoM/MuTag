@@ -1,23 +1,20 @@
-# MuTag
+# MuTag v2.0
 Repository for PCB and source file of the MuHack NFC Tag keychain.
 
-This is a custom printed circuit board that uses an STM8L microcontroller and an ST25 NFC ISO15 tag. 
-
-The STM8l101f3 is a low-power, 8-bit MCU from STMicroelectronics that is ideal for a variety of applications. 
+This is a custom printed circuit board featuring an ATTiny24a microcontroller and an ST25 NFC ISO15 tag. 
 
 From the MCU is it possible to access the NFC tag using I2C, to modify the tag's configuration and read/write data.
 
-![Alt text](images/collage.png?raw=true "MuTag")
+![Alt text](images/mutag_v2.jpg?raw=true "MuTag")
 
 ## Features
-- STM8L101F3 MCU
+- ATTiny24a MCU
 - ST25 NFC ISO15 tag with 4Kbit memory
 - Energy harvesting
 - Fast transfer memory, 256bytes of _Mailbox_
-- 2 LEDs
-- GPIOs from MCU and single GPO from NFC tag
+- 4 LEDs of different colors
 - I2C and UART (TBD) interfaces 
-- Small form factor: only 20x30mm
+- Small form factor: only 20x60mm
 
 # Getting Started
 
@@ -36,36 +33,67 @@ The NFC GPO is also connected to the MCU's pin 20 (Port C2).
 ## Activating Energy Harvesting Mode with the ST25 Android App
 
 By default, the ST25 NFC tag is set to "on demand" energy harvesting mode.
-To activate energy harvesting mode on an ST25 NFC tag, you will need to use the ST25 Android app. The following steps outline the process for activating energy harvesting mode:
+To activate energy harvesting mode on an ST25 NFC tag, you will need to use the ST25 Android app (future implementation of the software will automatically activate this through the I2C communication). The following steps outline the process for activating energy harvesting mode:
 
-1. Scan the tag with the ST25 Android app and from the left menu go to "Register Management"
+1. Download the ST25 Android app from the Google Play Store (https://play.google.com/store/apps/details?id=com.st.st25nfc)
 
-2. Re-scan the tag to update the tag's configuration. You will see a register called "EH_MODE". By default, this register is set to 0x01, which means that energy harvesting mode is set "on demand". To enable energy harvesting mode, change the value of this register to 0x00
+2. Scan the tag with the ST25 Android app and from the left menu go to "Register Management"
 
-3. While maintaining the tag in the field, tap the "Save" button to write the new configuration to the tag
+3. Re-scan the tag to update the tag's configuration. You will see a register called ``EH_MODE``. By default, this register is set to ``0x01``, which means that energy harvesting mode is set "on demand". To enable energy harvesting mode, change the value of this register to ``0x00``
 
-## Programming the STM8L MCU
-The PCB can be programmed using a STLink programmer. Connect the SWIM port by using SWIM/RESET/3v3/GND pins on the PCB. 
-The PCB must be powered by an alternate power source, in parallel with the programmer, as the STLink does not provide 3v3 power (the pin is only for voltage reference).
+4. While maintaining the tag in the field, tap the "Save" button to write the new configuration to the tag
 
-To program the STM8L MCU on this PCB, you will need to use the stm8flash tool and an STLink programmer. The following steps outline the process for programming the MCU:
+## Programming the ATTiny24a MCU
 
-1. Install the stm8flash tool on your computer. This tool can be downloaded from the official stm8flash GitHub repository (https://github.com/vdudouyt/stm8flash) or from your packets manager.
+Generally speaking, the ATTiny24a MCU must be programmed using an external ISP programmer. In this case, we will use an Arduino Uno as an ISP programmer (you can use any other Arduino board that can be used as an ISP). 
 
-2. Connect your STLink programmer to the PCB and to your computer. The SWIM/RESET/3v3/GND pins on the PCB must be connected to the SWIM/RESET/3v3/GND pins on the STLink programmer. The PCB must also be powered by an alternate power source, in parallel with the programmer, as the STLink does not provide 3v3 power (the pin is only for voltage reference).
+1. Flash the ```ArduinoISP``` sketch (found in the File -> Example menu) to an Arduino (or any other Arduino board that can be used as an ISP)
 
-3. Run the following command to flash the binary file to the MCU:
+2. Add the following line to "Additional Boards Manager URLs" in the Arduino IDE preferences:
 
-```bash
-./stm8flash -c stlinkv2 -p stm8l101f3 -w path/to/binary
-```
+```http://drazzy.com/package_drazzy.com_index.json```
 
-It's important to note that the above steps are a general outline and may vary slightly depending on the specific STLink programmer you are using and the binary file you are uploading. Before attempting to program your MCU, make sure to read the documentation for your STLink programmer and the stm8flash tool.
+3. Install the ```ATTinyCore``` by __Spence Konde__ board definition (found in the Tool -> Board -> Board Manager menu) and select the following settings:
+
+| Setting | Value |
+|---------|-------|
+| Board | ATTiny24/44/84 (noBootloader) |
+| Chip | ATTiny24(a) |
+| Clock | 1 MHz internal |
+| BOD | Disabled |
+| LTO | Enabled |
+| EEPROM | EEPROM retained |
+| millis()/micros() | Disabled |
+| Programmer | Arduino as ISP |
+
+4. Connect the MuTag to the Arduino as follows:
+
+| MuTag | Arduino |
+|-------|---------|
+| VDD   | 5V      |
+| GND   | GND     |
+| SCK   | 13      |
+| MISO  | 12      |
+| MOSI  | 11      |
+| RST   | 10      |
+
+*NOTE: The MuTag through hole ports are of 1.27mm diameter, enough to fit a common jumper wire. So with a little bit of patience you can push the pin rigth into the hole without soldering.*
+
+5. Take another jump wire and connect it the ```RESET``` pin of the Arduino and leave the other end unconnected
+
+6. Now the tricky part: to program the MuTag we need to send the Arduino in "reset mode" for a short period of time. To do this, we need to connect the ```RESET``` pin of the Arduino to ground (i.e. by touching the USB ground shield with the unconnected end the ```RESET``` wire) rigth before we press the "Upload" button in the Arduino IDE. Wait about 2/3 seconds and then release the RESET wire. You should see the Arduino IDE uploading the sketch to the MuTag.
+
+*NOTE: Depending on your Arduino IDE version, you might need to use the "Upload using Programmer" option in the Sketch menu instead of the "Upload" button.*
 
 ## TODOS:
-- [ ] Round the corners of the PCB
-- [ ] Move and make bigger pads for programming
 - [ ] Add a 3D model of the PCB
 - [ ] Find a good bootloader to enable UART programming
-- [ ] Upload decent photos of the final product
-- [ ] Evaluate the possibility of removing the 3v3 diode regulator
+- [ ] Evaluate the possibility of removing the diodes
+- [ ] Evaluate to move and make bigger pads for programming
+- [ ] Evaluate to change the MCU to an ATTiny44/84 to have more memory
+- [ ] Evaluate to remove the ```RESET``` pad
+
+## License
+Copyright (c) 2023 MrMoDDoM
+
+This project is licensed under the GNU AFFERO GENERAL PUBLIC License - see the [LICENSE.md](LICENSE.md) file for details
