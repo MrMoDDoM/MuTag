@@ -1,4 +1,4 @@
-# MuTag v2.0
+# MuTag v2.1
 Repository for PCB and source file of the MuHack NFC Tag keychain.
 
 This is a custom printed circuit board featuring an ATTiny24a microcontroller and an ST25 NFC ISO15 tag. 
@@ -8,7 +8,7 @@ From the MCU is it possible to access the NFC tag using I2C, to modify the tag's
 ![Alt text](images/mutag_v2.jpg?raw=true "MuTag")
 
 ## Features
-- ATTiny24a MCU
+- ATTiny44a MCU
 - ST25 NFC ISO15 tag with 4Kbit memory
 - Energy harvesting
 - Fast transfer memory, 256bytes of _Mailbox_
@@ -66,6 +66,8 @@ Generally speaking, the ATTiny24a MCU must be programmed using an external ISP p
 | millis()/micros() | Disabled |
 | Programmer | Arduino as ISP |
 
+*NOTE: the version v2
+
 4. Connect the MuTag to the Arduino as follows:
 
 | MuTag | Arduino |
@@ -77,7 +79,7 @@ Generally speaking, the ATTiny24a MCU must be programmed using an external ISP p
 | MOSI  | 11      |
 | RST   | 10      |
 
-*NOTE: The MuTag through hole ports are of 1.27mm diameter, enough to fit a common jumper wire. So with a little bit of patience you can push the pin rigth into the hole without soldering.*
+~~*NOTE: The MuTag through hole ports are of 1.27mm diameter, enough to fit a common jumper wire. So with a little bit of patience you can push the pin rigth into the hole without soldering.*~~ *The hole dimension was changed to a standard 2.54mm in the v2.1*
 
 5. Take another jump wire and connect it the ```RESET``` pin of the Arduino and leave the other end unconnected
 
@@ -88,10 +90,10 @@ Generally speaking, the ATTiny24a MCU must be programmed using an external ISP p
 ## TODOS:
 - [ ] Add a 3D model of the PCB
 - [ ] Find a good bootloader to enable UART programming
-- [ ] Evaluate the possibility of removing the diodes
-- [ ] Evaluate to move and make bigger pads for programming
+- [x] Evaluate the possibility of removing the diodes
+- [x] Evaluate to move and make bigger pads for programming
 - [ ] Evaluate to change the MCU to an ATTiny44/84 to have more memory
-- [ ] Evaluate to remove the ```RESET``` pad
+- [x] Evaluate to remove the ```RESET``` pad
 
 ## License
 Copyright (c) 2023 MrMoDDoM
