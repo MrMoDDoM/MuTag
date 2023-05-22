@@ -1,11 +1,11 @@
 # MuTag v2.1
 Repository for PCB and source file of the MuHack NFC Tag keychain.
 
-This is a custom printed circuit board featuring an ATTiny24a microcontroller and an ST25 NFC ISO15 tag. 
+This is a custom printed circuit board featuring an ATTiny44a microcontroller and an ST25 NFC ISO15 tag. 
 
 From the MCU is it possible to access the NFC tag using I2C, to modify the tag's configuration and read/write data.
 
-![Alt text](images/mutag_v2.jpg?raw=true "MuTag")
+![MuTag](images/mutag_v2.jpg?raw=true "MuTag")
 
 ## Features
 - ATTiny44a MCU
@@ -18,22 +18,31 @@ From the MCU is it possible to access the NFC tag using I2C, to modify the tag's
 
 # Getting Started
 
-In the Hardware folder you can find the PCB design files and the schematic. 
+In the Hardware folder you can find the PCB design files and the schematics. 
 
-The leds are connected to:
- - Rigth led on pin 9 (Port D0)
- - Left led on pin 10 (Port B0)
+#define YELLOW_LED 0
+#define GREEN_LED 1
+#define BLUE_LED 2
+#define RED_LED 3
 
-The NFC tag is connected to the MCU's I2C bus:
- - SDA on pin 18 (Port C0)
- - SCL on pin 19 (Port C1)
+The LEDs are connected to:
+- Yellow led on pin 0 (Port PA0)
+- Green led on pin 1 (Port PA1)
+- Blue led on pin 2 (Port PA2)
+- Red led on pin 3 (Port PA3)
 
-The NFC GPO is also connected to the MCU's pin 20 (Port C2).
+The NFC tag is connected to the ATTiny's I2C bus:
+- SDA on pin 6 (Port PA6)
+- SCL on pin 4 (Port PA4)
+
+The NFC GPO is also connected to the ATTiny's INT0 interrupt port (Port PB2).
 
 ## Activating Energy Harvesting Mode with the ST25 Android App
 
 By default, the ST25 NFC tag is set to "on demand" energy harvesting mode.
-To activate energy harvesting mode on an ST25 NFC tag, you will need to use the ST25 Android app (future implementation of the software will automatically activate this through the I2C communication). The following steps outline the process for activating energy harvesting mode:
+To activate energy harvesting mode on the ST25 NFC IC, you will need to use the ST25 Android app (future implementation of the software will automatically activate this through the I2C communication).
+
+Follow these steps:
 
 1. Download the ST25 Android app from the Google Play Store (https://play.google.com/store/apps/details?id=com.st.st25nfc)
 
@@ -41,11 +50,11 @@ To activate energy harvesting mode on an ST25 NFC tag, you will need to use the 
 
 3. Re-scan the tag to update the tag's configuration. You will see a register called ``EH_MODE``. By default, this register is set to ``0x01``, which means that energy harvesting mode is set "on demand". To enable energy harvesting mode, change the value of this register to ``0x00``
 
-4. While maintaining the tag in the field, tap the "Save" button to write the new configuration to the tag
+4. While maintaining the tag in the field, tap the "Save" button to write the new configuration to the tag (the default password is all zeros, just tap "OK" to continue)
 
 ## Programming the ATTiny24a MCU
 
-Generally speaking, the ATTiny24a MCU must be programmed using an external ISP programmer. In this case, we will use an Arduino Uno as an ISP programmer (you can use any other Arduino board that can be used as an ISP). 
+Generally speaking, the ATTiny44a MCU must be programmed using an external ISP programmer. In this case, we will use an Arduino Uno as an ISP programmer (you can use any other Arduino board that can be used as an ISP). 
 
 1. Flash the ```ArduinoISP``` sketch (found in the File -> Example menu) to an Arduino (or any other Arduino board that can be used as an ISP)
 
@@ -58,15 +67,13 @@ Generally speaking, the ATTiny24a MCU must be programmed using an external ISP p
 | Setting | Value |
 |---------|-------|
 | Board | ATTiny24/44/84 (noBootloader) |
-| Chip | ATTiny24(a) |
+| Chip | ATTiny44(a) (*Note: for v2.0 select 24*)|
 | Clock | 1 MHz internal |
 | BOD | Disabled |
 | LTO | Enabled |
 | EEPROM | EEPROM retained |
-| millis()/micros() | Disabled |
+| millis()/micros() | Enabled |
 | Programmer | Arduino as ISP |
-
-*NOTE: the version v2
 
 4. Connect the MuTag to the Arduino as follows:
 
@@ -79,7 +86,9 @@ Generally speaking, the ATTiny24a MCU must be programmed using an external ISP p
 | MOSI  | 11      |
 | RST   | 10      |
 
-~~*NOTE: The MuTag through hole ports are of 1.27mm diameter, enough to fit a common jumper wire. So with a little bit of patience you can push the pin rigth into the hole without soldering.*~~ *The hole dimension was changed to a standard 2.54mm in the v2.1*
+~~*NOTE: The MuTag through hole ports are of 1.27mm diameter, enough to fit a common jumper wire. So with a little bit of patience you can push the pin rigth into the hole without soldering.*~~ 
+
+*The holes dimension was changed to a standard 2.54mm in the v2.1*
 
 5. Take another jump wire and connect it the ```RESET``` pin of the Arduino and leave the other end unconnected
 
@@ -87,13 +96,27 @@ Generally speaking, the ATTiny24a MCU must be programmed using an external ISP p
 
 *NOTE: Depending on your Arduino IDE version, you might need to use the "Upload using Programmer" option in the Sketch menu instead of the "Upload" button.*
 
+## Accessing the NFC Tag with the I2C Interface
+The internal memory of the ST25 NFC tag can be accessed through the I2C bus as a standard EEPROM memory. The I2C address of the tag is ```0x53```.
+
+The "Hello_MuHack.ino" sketch is a simple example of how to read and write data to the tag.
+
 ## TODOS:
 - [ ] Add a 3D model of the PCB
-- [ ] Find a good bootloader to enable UART programming
+- [ ] Find a good bootloader to enable UART programming 
 - [x] Evaluate the possibility of removing the diodes
 - [x] Evaluate to move and make bigger pads for programming
-- [ ] Evaluate to change the MCU to an ATTiny44/84 to have more memory
+- [x] Evaluate to change the MCU to an ATTiny44/84 to have more memory
 - [x] Evaluate to remove the ```RESET``` pad
+
+## Notes on the Bootloader
+The bootloader is a small piece of code that is stored in the MCU's memory and that allows to program via UART. This is very useful because it avoid the need of an external SPI programmer.
+
+The [Optiboot version compiled by Spence Konde](https://github.com/SpenceKonde/ATTinyCore/blob/v2.0.0-devThis-is-the-head-submit-PRs-against-this/avr/extras/ATtiny_x4.md#optiboot-bootloader) uses the pins ```AIN0``` and ```AIN1```, currently connected to the LEDs. This leaves us with two options:
+- Remove the LEDs and use the pins for programming via UART
+- Recompiling the bootloader to use different pins
+
+Since this project is intended to be used as a keychain, which means that is to be programmed only once, I decided to not invest time in the bootloader and leave the LEDs as they are.
 
 ## License
 Copyright (c) 2023 MrMoDDoM
