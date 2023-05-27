@@ -5,7 +5,7 @@ This is a custom printed circuit board featuring an ATTiny44a microcontroller an
 
 From the MCU is it possible to access the NFC tag using I2C, to modify the tag's configuration and read/write data.
 
-![MuTag](images/mutag_v2.jpg?raw=true "MuTag")
+![MuTag](images/mutag_v2_1.jpg?raw=true "MuTag")
 
 ## Features
 - ATTiny44a MCU
@@ -20,10 +20,12 @@ From the MCU is it possible to access the NFC tag using I2C, to modify the tag's
 
 In the Hardware folder you can find the PCB design files and the schematics. 
 
+```
 #define YELLOW_LED 0
 #define GREEN_LED 1
 #define BLUE_LED 2
 #define RED_LED 3
+```
 
 The LEDs are connected to:
 - Yellow led on pin 0 (Port PA0)
@@ -52,7 +54,7 @@ Follow these steps:
 
 4. While maintaining the tag in the field, tap the "Save" button to write the new configuration to the tag (the default password is all zeros, just tap "OK" to continue)
 
-## Programming the ATTiny24a MCU
+## Programming the ATTiny44a MCU
 
 Generally speaking, the ATTiny44a MCU must be programmed using an external ISP programmer. In this case, we will use an Arduino Uno as an ISP programmer (you can use any other Arduino board that can be used as an ISP). 
 
